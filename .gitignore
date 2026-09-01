@@ -4,3 +4,4 @@ data/raw/
 data/processed/
 .env
 .ipynb_checkpoints/
+.DS_Store
