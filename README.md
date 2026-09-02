@@ -39,6 +39,7 @@ Python, pandas, scikit-learn, XGBoost, matplotlib, Jupyter
 
 ## Project Structure
 
+\'\'\'
 retail-churn-prediction/
 ├── notebooks/
 │   └── 01_eda.ipynb       # Full pipeline: EDA → cleaning → labeling → features → modeling
@@ -47,6 +48,7 @@ retail-churn-prediction/
 ├── data/                  # Not tracked (raw fetched via kagglehub; processed data gitignored)
 ├── requirements.txt
 └── README.md
+\'\'\'
 
 ## Setup
 
