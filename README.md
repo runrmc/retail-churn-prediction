@@ -21,18 +21,20 @@ Customer retention is far cheaper than acquisition, but knowing *who's actually 
 
 ## Results
 
-| Metric | Logistic Regression | XGBoost (default) | XGBoost (tuned) |
+| Metric | Logistic Regression | XGBoost (tuned) | XGBoost (value-weighted) |
 |---|---|---|---|
-| ROC-AUC | 0.791 | 0.773 | **0.806** |
-| Accuracy | 0.70 | 0.68 | **0.73** |
-| Recall (churned) | 0.68 | 0.68 | **0.77** |
-| Precision (churned) | 0.70 | 0.67 | 0.69 |
+| ROC-AUC | 0.791 | **0.806** | 0.799 |
+| Recall (churned) | 0.68 | **0.77** | 0.75 |
+| Precision (churned) | 0.70 | 0.69 | 0.70 |
+| Revenue captured | — | 49.9% | **57.6%** |
 
 **Final model**: tuned XGBoost (`max_depth=2`, `n_estimators=50`, `learning_rate=0.1`) — a deliberately shallow model, appropriate given the small feature set and dataset size.
 
 **Feature importance**: `frequency` (0.47) was the strongest predictor, ahead of `recency_days` (0.28) and `monetary` (0.23) — despite recency showing the most visually obvious relationship with churn during EDA. `return_rate` contributed minimally (0.02).
 
-**Key finding — revenue at risk**: while the model catches 77% of churners by customer count, it only captures 49.9% of the associated revenue. Missed churners (false negatives) have an average historical spend of **$2,163**, over 3x the $649 average of correctly identified churners — meaning the model systematically underperforms on high-value accounts, likely because large/infrequent wholesale-style purchasing patterns resemble the "about to churn" signal. This is flagged as a limitation: for high-value customers specifically, model output should supplement — not replace — manual account review.
+**Key finding — revenue at risk**: while the tuned model catches 77% of churners by customer count, it only captures 49.9% of the associated revenue. Missed churners (false negatives) have an average historical spend of **$2,163**, over 3x the $649 average of correctly identified churners — meaning the model systematically underperforms on high-value accounts, likely because large/infrequent wholesale-style purchasing patterns resemble the "about to churn" signal.
+
+**Follow-up experiment — value-weighted training**: to test whether this gap was addressable, XGBoost was retrained using `monetary` value as a sample weight, penalizing misclassification of high-spend customers more heavily. This improved revenue capture to **57.6%** (+7.7 points), at a small cost to overall recall (0.77 → 0.75) and ROC-AUC (0.806 → 0.799). This confirms the gap was partly a training-objective issue, not purely a feature limitation — and highlights that "best model" depends on business priorities: the standard model reaches more customers by count, while the value-weighted model protects more revenue. Model choice should reflect which objective matters more to the business deploying it.
 
 ## Tech Stack
 
