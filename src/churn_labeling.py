@@ -44,7 +44,7 @@ def build_churn_labels(purchases: pd.DataFrame, window_days: int = CHURN_WINDOW_
 
 
 if __name__ == '__main__':
-    purchases, cancellations = load_and_clean_data()
+    purchases, _ = load_and_clean_data()
     reference_date = get_reference_date(purchases)
     churn_labels = build_churn_labels(purchases)
 
