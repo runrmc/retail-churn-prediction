@@ -3,12 +3,16 @@ asttokens==3.0.2
 certifi==2026.7.22
 charset-normalizer==3.5.1
 comm==0.2.3
+contourpy==1.3.0
+cycler==0.12.1
 debugpy==1.8.21
 decorator==5.3.1
 exceptiongroup==1.3.1
 executing==2.2.1
+fonttools==4.60.2
 idna==3.19
 importlib_metadata==8.7.1
+importlib_resources==6.5.2
 ipykernel==6.31.0
 ipython==8.18.1
 jedi==0.19.2
@@ -16,6 +20,8 @@ joblib==1.5.3
 jupyter_client==8.6.3
 jupyter_core==5.8.1
 kagglehub==0.3.13
+kiwisolver==1.4.7
+matplotlib==3.9.4
 matplotlib-inline==0.2.2
 nest-asyncio==1.6.0
 numpy==2.0.2
@@ -23,12 +29,14 @@ packaging==26.3
 pandas==2.3.3
 parso==0.8.7
 pexpect==4.9.0
+pillow==11.3.0
 platformdirs==4.4.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
 ptyprocess==0.7.0
 pure_eval==0.2.3
 Pygments==2.21.0
+pyparsing==3.3.2
 python-dateutil==2.9.0.post0
 pytz==2026.3.post1
 PyYAML==6.0.3
@@ -47,4 +55,5 @@ tzdata==2026.3
 ucimlrepo==0.0.7
 urllib3==2.6.3
 wcwidth==0.8.3
+xgboost==2.1.4
 zipp==3.23.1

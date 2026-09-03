@@ -21,11 +21,12 @@ Customer retention is far cheaper than acquisition, but knowing *who's actually 
 
 ## Results
 
-| Metric | Logistic Regression | XGBoost (tuned) |
-|---|---|---|
-| ROC-AUC | 0.791 | **0.806** |
-| Recall (churned) | 0.68 | **0.77** |
-| Precision (churned) | 0.70 | 0.69 |
+| Metric | Logistic Regression | XGBoost (default) | XGBoost (tuned) |
+|---|---|---|---|
+| ROC-AUC | 0.791 | 0.773 | **0.806** |
+| Accuracy | 0.70 | 0.68 | **0.73** |
+| Recall (churned) | 0.68 | 0.68 | **0.77** |
+| Precision (churned) | 0.70 | 0.67 | 0.69 |
 
 **Final model**: tuned XGBoost (`max_depth=2`, `n_estimators=50`, `learning_rate=0.1`) — a deliberately shallow model, appropriate given the small feature set and dataset size.
 
