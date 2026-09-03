@@ -6,9 +6,6 @@ from typing import Tuple
 import kagglehub
 import pandas as pd
 
-import warnings
-warnings.filterwarnings('ignore')
-
 
 def load_raw_data() -> pd.DataFrame:
     """Download (or use cached) dataset via kagglehub, return as a raw DataFrame."""
