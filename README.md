@@ -46,7 +46,7 @@ An interactive Streamlit dashboard lets you explore the project's results withou
 - **Visualizations**: feature importance, RFM distributions by churn status, and the revenue-at-risk comparison
 - **Customer Lookup**: select any customer by ID to view their RFM profile and a live churn prediction, alongside their actual historical outcome
 
-<img src='reports/streamlit_demo.gif' width=100%>
+![Dashboard demo](reports/streamlit_demo.gif)
 
 ## Tech Stack
 
