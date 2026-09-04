@@ -55,61 +55,58 @@ standard_metrics = get_metrics(standard_model, X_test, y_test)
 weighted_metrics = get_metrics(weighted_model, X_test, y_test)
 
 # display
-st.header('Model Performance')
+with st.expander('Model Performance', expanded=True):
+    model_choice = st.radio(
+        label='Select model to view:',
+        options=['Standard', 'Value-Weighted'],
+        horizontal=True
+    )
 
-model_choice = st.radio(
-    label='Select model to view:',
-    options=['Standard', 'Value-Weighted'],
-    horizontal=True
-)
+    active_metrics = standard_metrics if model_choice == 'Standard' else weighted_metrics
 
-active_metrics = standard_metrics if model_choice == 'Standard' else weighted_metrics
+    if model_choice == 'Value-Weighted':
+        st.caption('Trained with monetary value as sample weight - prioritizes catching high-spend churners, at a small cost to overall recall.')
 
-if model_choice == 'Value-Weighted':
-    st.caption('Trained with monetary value as sample weight - prioritizes catching high-spend churners, at a small cost to overall recall.')
+    col1, col2, col3 = st.columns(3)
+    col1.metric('ROC-AUC', f'{active_metrics["roc_auc"]:.3f}')
+    col2.metric('Recall', f'{active_metrics["recall"]:.3f}')
+    col3.metric('Precision', f'{active_metrics["precision"]:.3f}')
 
-col1, col2, col3 = st.columns(3)
-col1.metric('ROC-AUC', f'{active_metrics["roc_auc"]:.3f}')
-col2.metric('Recall', f'{active_metrics["recall"]:.3f}')
-col3.metric('Precision', f'{active_metrics["precision"]:.3f}')
+with st.expander('Visualizations', expanded=True):
+    col1, col2 = st.columns(2)
 
-st.header('Visualizations')
+    with col1:
+        st.subheader('Feature Importance')
+        st.image('reports/feature_importance.png')
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader('Feature Importance')
-    st.image('reports/feature_importance.png')
+    with col2:
+        st.subheader('Revenue at Risk: Missed vs. Caught Churners')
+        st.image('reports/revenue_at_risk_gap.png')
 
     st.subheader('RFM Distributions by Churn Status')
     st.image('reports/rfm_distribution_by_churn.png')
 
-with col2:
-    st.subheader('Revenue at Risk: Missed vs. Caught Churners')
-    st.image('reports/revenue_at_risk_gap.png')
+with st.expander('Customer Lookup', expanded=True):
+    customer_ids = sorted(engineered_df['Customer ID'].unique())
+    selected_id = st.selectbox('Select a Customer ID:', customer_ids)
 
-st.header('Customer Lookup')
+    customer_row = engineered_df[engineered_df['Customer ID'] == selected_id].iloc[0]
 
-customer_ids = sorted(engineered_df['Customer ID'].unique())
-selected_id = st.selectbox('Select a Customer ID:', customer_ids)
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric('Recency (days)', int(customer_row['recency_days']))
+    col2.metric('Frequency (orders)', int(customer_row['frequency']))
+    col3.metric('Monetary ($)', f'${customer_row["monetary"]:,.2f}')
+    col4.metric('Return Rate', f'{customer_row["return_rate"]:,.1%}')
 
-customer_row = engineered_df[engineered_df['Customer ID'] == selected_id].iloc[0]
+    active_model = standard_model if model_choice == 'Standard' else weighted_model
+    customer_features = customer_row[FEATURE_COLS].values.reshape(1, -1)
+    churn_probability = active_model.predict_proba(customer_features)[0][1]
+    predicted_churn = active_model.predict(customer_features)[0]
 
-col1, col2, col3, col4 = st.columns(4)
-col1.metric('Recency (days)', int(customer_row['recency_days']))
-col2.metric('Frequency (orders)', int(customer_row['frequency']))
-col3.metric('Monetary ($)', f'${customer_row["monetary"]:,.2f}')
-col4.metric('Return Rate', f'{customer_row["return_rate"]:,.1%}')
+    st.subheader('Prediction')
+    col1, col2, col3 = st.columns(3)
+    col1.metric('Churn Probability', f'{churn_probability:.1%}')
+    col2.metric('Prediction', 'Will Churn' if predicted_churn == 1 else 'Will Stay')
 
-active_model = standard_model if model_choice == 'Standard' else weighted_model
-customer_features = customer_row[FEATURE_COLS].values.reshape(1, -1)
-churn_probability = active_model.predict_proba(customer_features)[0][1]
-predicted_churn = active_model.predict(customer_features)[0]
-
-st.subheader('Prediction')
-col1, col2, col3 = st.columns(3)
-col1.metric('Churn Probability', f'{churn_probability:.1%}')
-col2.metric('Prediction', 'Will Churn' if predicted_churn == 1 else 'Will Stay')
-
-actual_status = 'Churned' if customer_row['churned'] == 1 else 'Retained'
-col3.metric('Actual outcome (from historical data)', actual_status)
+    actual_status = 'Churned' if customer_row['churned'] == 1 else 'Retained'
+    col3.metric('Actual outcome (from historical data)', actual_status)
