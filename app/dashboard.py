@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.data_loader import load_and_clean_data
 from src.features import build_features
-from src.model import split_data, load_model, MODEL_PATH, WEIGHTED_MODEL_PATH
+from src.model import split_data, load_model, MODEL_PATH, WEIGHTED_MODEL_PATH, FEATURE_COLS
 from sklearn.metrics import roc_auc_score, recall_score, precision_score
 from xgboost import XGBClassifier
 
@@ -87,3 +87,29 @@ with col1:
 with col2:
     st.subheader('Revenue at Risk: Missed vs. Caught Churners')
     st.image('reports/revenue_at_risk_gap.png')
+
+st.header('Customer Lookup')
+
+customer_ids = sorted(engineered_df['Customer ID'].unique())
+selected_id = st.selectbox('Select a Customer ID:', customer_ids)
+
+customer_row = engineered_df[engineered_df['Customer ID'] == selected_id].iloc[0]
+
+col1, col2, col3, col4 = st.columns(4)
+col1.metric('Recency (days)', int(customer_row['recency_days']))
+col2.metric('Frequency (orders)', int(customer_row['frequency']))
+col3.metric('Monetary ($)', f'${customer_row["monetary"]:,.2f}')
+col4.metric('Return Rate', f'{customer_row["return_rate"]:,.1%}')
+
+active_model = standard_model if model_choice == 'Standard' else weighted_model
+customer_features = customer_row[FEATURE_COLS].values.reshape(1, -1)
+churn_probability = active_model.predict_proba(customer_features)[0][1]
+predicted_churn = active_model.predict(customer_features)[0]
+
+st.subheader('Prediction')
+col1, col2, col3 = st.columns(3)
+col1.metric('Churn Probability', f'{churn_probability:.1%}')
+col2.metric('Prediction', 'Will Churn' if predicted_churn == 1 else 'Will Stay')
+
+actual_status = 'Churned' if customer_row['churned'] == 1 else 'Retained'
+col3.metric('Actual outcome (from historical data)', actual_status)
