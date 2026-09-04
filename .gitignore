@@ -1,6 +1,7 @@
 venv/
 __pycache__/
 data/processed/
+models/
 .env
 .ipynb_checkpoints/
 .DS_Store

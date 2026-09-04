@@ -14,8 +14,8 @@ from src.data_loader import load_and_clean_data
 from src.features import build_features
 
 FEATURE_COLS = ['recency_days', 'frequency', 'monetary', 'return_rate']
-MODEL_PATH = '../models/xgb_churn_model.joblib'
-WEIGHTED_MODEL_PATH = '../models/xgb_churn_model_weighted.joblib'
+MODEL_PATH = 'models/xgb_churn_model.joblib'
+WEIGHTED_MODEL_PATH = 'models/xgb_churn_model_weighted.joblib'
 
 # best hyperparamers found via grid search (see notebooks/01_eda.ipynb)
 BEST_PARAMS = {
