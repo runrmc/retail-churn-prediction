@@ -38,8 +38,6 @@ def get_models() -> Tuple[XGBClassifier, XGBClassifier]:
 engineered_df = get_engineered_data()
 standard_model, weighted_model = get_models()
 
-st.write('Dashboard is working - data and models loaded.')
-
 # compute metrics for both models
 X_train, X_test, y_train, y_test = split_data(engineered_df)
 
@@ -52,6 +50,28 @@ def get_metrics(model: XGBClassifier, X_test: pd.DataFrame, y_test: pd.Series) -
         'recall': recall_score(y_test, y_pred),
         'precision': precision_score(y_test, y_pred),
     }
+
+standard_metrics = get_metrics(standard_model, X_test, y_test)
+weighted_metrics = get_metrics(weighted_model, X_test, y_test)
+
+# display
+st.header('Model Performance')
+
+model_choice = st.radio(
+    label='Select model to view:',
+    options=['Standard', 'Value-Weighted'],
+    horizontal=True
+)
+
+active_metrics = standard_metrics if model_choice == 'Standard' else weighted_metrics
+
+if model_choice == 'Value-Weighted':
+    st.caption('Trained with monetary value as sample weight - prioritizes catching high-spend churners, at a small cost to overall recall.')
+
+col1, col2, col3 = st.columns(3)
+col1.metric('ROC-AUC', f'{active_metrics["roc_auc"]:.3f}')
+col2.metric('Recall', f'{active_metrics["recall"]:.3f}')
+col3.metric('Precision', f'{active_metrics["precision"]:.3f}')
 
 st.header('Visualizations')
 
