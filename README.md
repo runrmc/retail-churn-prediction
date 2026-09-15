@@ -2,6 +2,8 @@
 
 Predicting customer churn for a UK-based online gift retailer using real, messy transaction data — with a self-engineered churn label (no pre-built target variable), a business-facing evaluation, and an interactive dashboard for exploring results.
 
+**[Launch the live dashboard →](https://retail-churn-prediction-b8jqdhw9eprjqtjtcqv2us.streamlit.app/)**
+
 ## Problem
 
 Customer retention is far cheaper than acquisition, but knowing *who's actually at risk* of leaving is non-trivial when a business has no explicit "churned" flag in its data. This project builds a full pipeline — from raw transactions to a deployable churn model and interactive dashboard — to identify at-risk customers and quantify the revenue tied to them.
@@ -40,7 +42,9 @@ Customer retention is far cheaper than acquisition, but knowing *who's actually 
 
 ## Dashboard
 
-An interactive Streamlit dashboard lets you explore the project's results without running the notebook:
+**[View the live interactive dashboard →](https://retail-churn-prediction-b8jqdhw9eprjqtjtcqv2us.streamlit.app/)**
+
+Explore the project's results without running the notebook:
 
 - **Model Performance**: toggle between the standard and value-weighted models to compare ROC-AUC, recall, and precision
 - **Visualizations**: feature importance, RFM distributions by churn status, and the revenue-at-risk comparison
@@ -68,6 +72,7 @@ retail-churn-prediction/
 ├── reports/               # Saved visualizations
 ├── data/                  # Not tracked (raw fetched via kagglehub; processed data gitignored)
 ├── requirements.txt
+├── runtime.txt            # Pins Python 3.11 for Streamlit Community Cloud
 └── README.md
 ```
 
@@ -87,7 +92,9 @@ python3 -m src.model              # standard model
 python3 -m src.model --weighted   # value-weighted model
 ```
 
-To launch the dashboard:
+To launch the dashboard locally:
 ```bash
 streamlit run app/dashboard.py
 ```
+
+Or skip local setup entirely and use the **[live dashboard](https://retail-churn-prediction-b8jqdhw9eprjqtjtcqv2us.streamlit.app/)**.
